@@ -1,7 +1,14 @@
 package com.example.mobileservicess;
 
+import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,22 +17,26 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 
 public class PingAsync extends AsyncTask<Void, Void, String> {
-
     private static final String LOG_TAG = PingAsync.class.getSimpleName();
-
 
     public PingAsync() {
     }
 
     @Override
     protected String doInBackground(Void... voids) {
-         try {
+         /*try {
              Thread.sleep(600000);
          } catch (InterruptedException e) {
              e.printStackTrace();
-         }
+         }*/
         return NetworkUtils.getBackendInfo();
     }
 
@@ -37,9 +48,8 @@ public class PingAsync extends AsyncTask<Void, Void, String> {
            // JSONObject jsonObject = new JSONObject(s);
             JSONArray Array = new JSONArray(s);
 
-            for(int i=0;i<Array.length();i++)
-           {
-                 JSONObject currentItem = Array.getJSONObject(i);
+
+                 JSONObject currentItem = Array.getJSONObject(0);
 
                  Log.d(LOG_TAG,"json = "+currentItem.toString());
                  Log.d(LOG_TAG,"type = "+currentItem.getString("jobType"));
@@ -65,7 +75,7 @@ public class PingAsync extends AsyncTask<Void, Void, String> {
                  in.close();
                  Log.d(LOG_TAG,"pingResult " + pingResult);
                  Service.pingResult = pingResult;
-          }
+
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }

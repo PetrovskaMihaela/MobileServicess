@@ -57,6 +57,17 @@ public class Service extends android.app.Service {
 
     }
 
+    public String dependString()
+    {
+        if(responseString == "")
+        {
+            return pingResult;
+        }
+        else{
+            return responseString;
+        }
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
@@ -91,7 +102,7 @@ public class Service extends android.app.Service {
                 count++;
                 if(count<=3)
                 {
-                    for(int i=0; i<count; i++)
+                    for(int i = 0; i < count; i++)
                     {
                         saveResponse();
                     }
@@ -108,7 +119,7 @@ public class Service extends android.app.Service {
     public void startAsync(){
         Timer timer = new Timer();
         initializeTimerTask();
-        timer.schedule(timertask,1000,6000);
+        timer.schedule(timertask,1000,600000);
     }
 
     public void initializeTimerTask() {
@@ -118,6 +129,8 @@ public class Service extends android.app.Service {
             public void run() {
 
                 new PingAsync().execute();
+                new PostRequestASync().execute(dependString());
+
             }
         };
     }
@@ -147,11 +160,11 @@ public class Service extends android.app.Service {
      */
     public void restartForeground() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.i(TAG, "restarting foreground");
+            Log.i(TAG, "Restarting Foreground");
             try {
                 Notification notification = new Notification();
                 startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.ic_sleep));
-                Log.i(TAG, "restarting foreground successful");
+                Log.i(TAG, "Restarting Foreground Successful");
                 new PingAsync().execute();
             } catch (Exception e) {
                 Log.e(TAG, "Error in notification " + e.getMessage());
@@ -163,7 +176,7 @@ public class Service extends android.app.Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy called");
+        Log.i(TAG, "onDestroy Called");
         // restart the never ending service
         Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
         sendBroadcast(broadcastIntent);

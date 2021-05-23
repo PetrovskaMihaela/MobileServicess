@@ -20,16 +20,17 @@ public class NetworkUtils {
 
     static String getBackendInfo()
     {
-        HttpURLConnection urlConnection = null;
+        HttpURLConnection urlConnection;
+        urlConnection = null;
         BufferedReader reader = null;
         String JSONString;
         try{
 
-            Uri builtUri = Uri.parse("http://10.0.2.2:5000/getjobs")
+            Uri builtUri = Uri.parse("http://192.168.100.7:5000/getjobs/hardware")
                     .buildUpon()
                     .build();
 
-            Log.d(LOG_TAG,"Connecting to http://10.0.2.2:5000/getjobs");
+            Log.d(LOG_TAG,"Connecting to http://192.168.100.7:5000/getjobs/hardware");
 
             URL requestUrl = new URL(builtUri.toString());
             urlConnection = (HttpURLConnection) requestUrl.openConnection();
@@ -38,8 +39,8 @@ public class NetworkUtils {
             Log.d(LOG_TAG,"Connected");
 
             InputStream inputStream = urlConnection.getInputStream();
-           // StringBuffer buffer = new StringBuffer();
-            StringBuilder buffer = new StringBuilder();
+            StringBuffer buffer = new StringBuffer();
+            //StringBuilder buffer = new StringBuilder();
 
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -54,7 +55,7 @@ public class NetworkUtils {
             e.printStackTrace();
             return null;
         }finally {
-            if(urlConnection!=null){
+            if(urlConnection != null){
                 urlConnection.disconnect();
             }
             if(reader != null)
